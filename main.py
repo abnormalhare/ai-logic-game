@@ -1,7 +1,9 @@
 import os
 Board = {
     "Input": [],
-    "Output": []
+    "Output": [],
+    "On": {Output: 1}
+    "Off": {Output: 0}
 }
 os.system("cls")
 def add_gate(gtype: str, in0: str, in1: str, end: bool):
@@ -10,6 +12,14 @@ def add_gate(gtype: str, in0: str, in1: str, end: bool):
     gname = f"{gtype} Gate {gnum}"
     Board[gname] = {"Inputs": [in0, in1], "Output": None, "end": end}
     return f"{gname} created with connections {in0}, {in1}"
+
+def rename_gate(old: str, new: str):
+    global Board
+    if old in list(Board.keys()):
+        Board = {new if k == old else k:v for k,v in Board.items()}
+    else:
+        return f"Value not found: {old}"
+    return f"Renamed '{old}' to '{new}'"
 
 def run_game(*inputs):
     global Board
@@ -43,19 +53,19 @@ def run_game(*inputs):
                 gin1val = Board[gin1]["Output"]
             if not c[1] and gin2 != None:
                 gin2val = Board[gin2]["Output"]
-            if "NAND Gate" in gname:
+            if "NAND" in gname:
                 out = int(not (gin1val & gin2val))
                 print(f"{gin1val} ({gin1}) NAND {gin2val} ({gin2})   -> {out}", end="")
-            elif "AND Gate" in gname:
+            elif "AND" in gname:
                 out = gin1val & gin2val
                 print(f"{gin1val} ({gin1})  AND {gin2val} ({gin2})   -> {out}", end="")
-            elif "XOR Gate" in gname:
+            elif "XOR" in gname:
                 out = gin1val ^ gin2val
                 print(f"{gin1val} ({gin1})  XOR {gin2val} ({gin2})   -> {out}", end="")
-            elif "OR Gate" in gname:
+            elif "OR" in gname:
                 out = gin1val | gin2val
                 print(f"{gin1val} ({gin1})   OR {gin2val} ({gin2})   -> {out}", end="")
-            elif "NOT Gate" in gname:
+            elif "NOT" in gname:
                 out = int(not gin1val)
                 print(f"                    NOT {gin1val} ({gin1})   -> {out}", end="")
             else:
