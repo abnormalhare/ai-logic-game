@@ -14,9 +14,9 @@ def add_gate(gtype: str, in0: str, in1: str, end: bool):
 def run_game(*inputs):
     global Board
     for i in inputs:
+        if i > 1 or i < 0:
+            raise "One or more inputs are not a bit."
         Board["Input"].append(i)
-    if len(Board["Input"]) > len(inputs):
-        raise f"Too few inputs! {len(inputs)} < {len(Board['Input'])}"
     for gname, gate in Board.items():
             if "Input" in gname or "Output" in gname:
                 continue
@@ -24,12 +24,20 @@ def run_game(*inputs):
             c = [False, False]
             if "Input" in gin1:
                 gin1.split()
-                gin1val = Board["Input"][int(gin1[-1])]
+                try:
+                    gin1val = Board["Input"][int(gin1[-1])]
+                except:
+                    print(f"Too few inputs: {gin1[-1]}")
+                    break
                 c[0] = True
             if gin2 != None:
                 if "Input" in gin2:
                     gin2.split()
-                    gin2val = Board["Input"][int(gin2[-1])]
+                    try:
+                        gin2val = Board["Input"][int(gin2[-1])]
+                    except:
+                        print(f"Too few inputs: {gin2[-1]}")
+                        break
                     c[1] = True
             if not c[0]:
                 gin1val = Board[gin1]["Output"]
@@ -59,4 +67,6 @@ def run_game(*inputs):
             else:
                 gate["Output"] = out
                 print()
+    if Board['Output'] == []:
+        Board['Output'] = ["Error"]
     return f"End result: {' '.join(Board['Output'])}"
