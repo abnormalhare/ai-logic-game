@@ -2,8 +2,8 @@ import os
 Board = {
     "Input": [],
     "Output": [],
-    "On": {Output: 1}
-    "Off": {Output: 0}
+    "On": {"Output": 1},
+    "Off": {"Output": 0}
 }
 os.system("cls")
 def add_gate(gtype: str, in0: str, in1: str, end: bool):
@@ -21,14 +21,16 @@ def rename_gate(old: str, new: str):
         return f"Value not found: {old}"
     return f"Renamed '{old}' to '{new}'"
 
-def run_game(*inputs):
+
+
+def run_game(*inputs, numout=False):
     global Board
     for i in inputs:
         if i > 1 or i < 0:
             raise "One or more inputs are not a bit."
         Board["Input"].append(i)
     for gname, gate in Board.items():
-            if "Input" in gname or "Output" in gname:
+            if "Input" in gname or "Output" in gname or gname == "On" or "Off" in gname:
                 continue
             gin1, gin2 = gate["Inputs"]
             c = [False, False]
@@ -79,4 +81,11 @@ def run_game(*inputs):
                 print()
     if Board['Output'] == []:
         Board['Output'] = ["Error"]
+    if numout:
+        o = Board["Output"]
+        o.reverse()
+        r = 0
+        for c, i in enumerate(o):
+            r += int(i) * (2 ** c)
+        return f"End result: {r}"
     return f"End result: {' '.join(Board['Output'])}"
